@@ -4,8 +4,8 @@ import { Prompt } from "@/models/prompt";
 export const GET = async (request: Request) => {
   try {
     await connectDB();
-    const prompts = await Prompt.find();
-    return new Response(JSON.stringify({ Prompts: prompts }));
+    const prompts = await Prompt.find().sort({createdAt: -1});
+    return new Response(JSON.stringify({ prompts: prompts }));
   } catch (error) {
     console.log("Error fetching all Prompt: ", error);
     return new Response("Error fetching all Prompts", { status: 500 });
@@ -27,7 +27,8 @@ export const POST = async (request: Request) => {
     });
 
     return new Response(
-      JSON.stringify({ Message: "Prompt Created.", newPrompt: newPrompt })
+      JSON.stringify({ Message: "Prompt Created.", newPrompt: newPrompt }),
+      { status: 201 }
     );
   } catch (error) {
     console.log("Error creating Prompt: ", error);
